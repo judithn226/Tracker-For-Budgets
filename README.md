@@ -16,7 +16,7 @@ Giving users a fast and easy way to track their money is important, but allowing
 
 ## Deployed APP
 
-![deployed](https://thisorthat529.herokuapp.com/)
+![Budget Tracker](https://thisorthat529.herokuapp.com/)
 
 ## Installation
 
