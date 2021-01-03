@@ -1,28 +1,29 @@
 const express = require("express");
-const logger = require("morgan");
 const mongoose = require("mongoose");
-const compression = require("compression");
-
-const PORT = 3000;
-
+const logger = require("morgan");
+const db = require("./models");
 const app = express();
-
+const path = require("path");
 app.use(logger("dev"));
-
-app.use(compression());
+app.get("/exercise", (req, res) => {
+    res.sendFile(path.join(`${__dirname}/public/exercise.html`));
+});
+app.get("/stats", (req, res) => {
+    res.sendFile(path.join(`${__dirname}/public/stats.html`));
+});
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
 app.use(express.static("public"));
-
-mongoose.connect("mongodb+srv://budgetTrack:1234@cluster0.i7njn.mongodb.net/BudgetTrack?retryWrites=true&w=majority", { 
-  useNewUrlParser: true,
-  useFindAndModify: false
-});
-
-// routes
-app.use(require("./routes/api.js"));
-
-app.listen(PORT, () => {
-  console.log(`App running on port ${PORT}!`);
-});
+require("./routes/routes.js")(app);
+const PORT = process.env.PORT || 3000;
+const DeprecationWarning = {
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useNewUrlParser: true,
+};
+mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://budgetTrack:1234@cluster0.i7njn.mongodb.net/BudgetTrack?retryWrites=true&w=majority", DeprecationWarning)
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`localhost:${PORT}`);
+        });
+    });
